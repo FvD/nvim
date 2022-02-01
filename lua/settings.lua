@@ -34,6 +34,32 @@ vim.cmd([[
   au BufRead,BufNewFile *.slimbars    set syntax=slim
 ]])
 
+vim.cmd([[
+  "------------------------------------
+  " Spell Check
+  "------------------------------------
+  let g:myLang=0
+  let g:myLangList=["nospell","en_us", "en_gb", "nl", "es"]
+  function! ToggleSpell()
+    let g:myLang=g:myLang+1
+    if g:myLang>=len(g:myLangList) | let g:myLang=0 | endif
+    if g:myLang==0
+      setlocal nospell
+    else
+      execute "setlocal spell spelllang=".get(g:myLangList, g:myLang)
+    endif
+    echo "spell checking language:" g:myLangList[g:myLang]
+  endfunction
+
+  nmap <silent> <F7> :call ToggleSpell()<CR>
+  nmap <k5> z=
+  nmap <k1> [s
+  nmap <k3> ]s
+  nmap <k8> zg
+  nmap <k9> zug
+  set guioptions-=T
+]])
+
 -- Commands mode
 -- vim.o.wildmenu = true -- on TAB, complete options for system command
 -- vim.o.wildignore = 'deps,.svn,CVS,.git,.hg,*.o,*.a,*.class,*.mo,*.la,*.so,*.obj,*.swp,*.jpg,*.png,*.xpm,*.gif,.DS_Store,*.aux,*.out,*.toc'
