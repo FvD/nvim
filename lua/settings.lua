@@ -16,6 +16,33 @@ vim.opt.lisp = true
 vim.opt.diffopt = "vertical"
 
 vim.cmd([[
+  "------------------------------------
+  " Spell Check
+  "------------------------------------
+  let g:myLang=0
+  let g:myLangList=["nospell","en_us", "en_gb", "nl", "es"]
+  function! ToggleSpell()
+    let g:myLang=g:myLang+1
+    if g:myLang>=len(g:myLangList) | let g:myLang=0 | endif
+    if g:myLang==0
+      setlocal nospell
+    else
+      execute "setlocal spell spelllang=".get(g:myLangList, g:myLang)
+    endif
+    echo "spell checking language:" g:myLangList[g:myLang]
+  endfunction
+
+  nmap <silent> <F7> :call ToggleSpell()<CR>
+  nmap <k5> z=
+  nmap <k1> [s
+  nmap <k3> ]s
+  nmap <k8> zg
+  nmap <k9> zug
+  set guioptions-=T
+]])
+
+
+vim.cmd([[
 set guitablabel=\[%N\]\ %t\ %M 
   set shortmess+=I
   filetype plugin indent on 
@@ -76,7 +103,6 @@ vim.cmd([[
 ]])
 
 vim.o.background = 'dark'
-vim.cmd('colorscheme nightfox')
 
 vim.cmd([[
   "------------------------------------
@@ -257,32 +283,28 @@ require('lualine').setup {
   extensions = {}
 }
 
-local nightfox = require('nightfox')
-
--- This function set the configuration of nightfox. If a value is not passed in the setup function
--- it will be taken from the default configuration above
-nightfox.setup({
-  fox = "nightfox", -- Which fox style should be applied
-  transparent = true, -- Disable setting the background color
-  alt_nc = false, -- Non current window bg to alt color see `hl-NormalNC`
-  terminal_colors = true, -- Configure the colors used when opening :terminal
-  styles = {
-    comments = "NONE", -- Style that is applied to comments: see `highlight-args` for options
-    functions = "NONE", -- Style that is applied to functions: see `highlight-args` for options
-    keywords = "NONE", -- Style that is applied to keywords: see `highlight-args` for options
-    strings = "NONE", -- Style that is applied to strings: see `highlight-args` for options
-    variables = "NONE", -- Style that is applied to variables: see `highlight-args` for options
-  },
-  inverse = {
-    match_paren = false, -- Enable/Disable inverse highlighting for match parens
-    visual = false, -- Enable/Disable inverse highlighting for visual selection
-    search = false, -- Enable/Disable inverse highlights for search highlights
-  },
-  colors = {}, -- Override default colors
-  hlgroups = {}, -- Override highlight groups
+require('nightfox').setup({
+	options = {
+	  transparent = true, -- Disable setting the background color
+	  alt_nc = false, -- Non current window bg to alt color see `hl-NormalNC`
+	  terminal_colors = true, -- Configure the colors used when opening :terminal
+	  styles = {
+	    comments = "NONE", -- Style that is applied to comments: see `highlight-args` for options
+	    functions = "NONE", -- Style that is applied to functions: see `highlight-args` for options
+	    keywords = "NONE", -- Style that is applied to keywords: see `highlight-args` for options
+	    strings = "NONE", -- Style that is applied to strings: see `highlight-args` for options
+	    variables = "NONE", -- Style that is applied to variables: see `highlight-args` for options
+	  },
+	  inverse = {
+	    match_paren = false, -- Enable/Disable inverse highlighting for match parens
+	    visual = false, -- Enable/Disable inverse highlighting for visual selection
+	    search = false, -- Enable/Disable inverse highlights for search highlights
+	  },
+	  pallets = {}, -- Override default colors
+	  groups = {}, -- Override highlight groups
+  }
 })
 
--- Load the configuration set above and apply the colorscheme
-nightfox.load()
 
+vim.cmd('colorscheme nightfox')
 
