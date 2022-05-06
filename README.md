@@ -38,7 +38,7 @@ Pkg.add("LanguageServer")
 ### Docker
 
 ```
-npm install -g dockerfile-language-server-nodejs
+npm install dockerfile-language-server-nodejs
 ```
 
 
