@@ -36,6 +36,7 @@ Pkg.add("LanguageServer")
 ```
 
 ### Docker
+Note: this requires node>=14.x and will not work with just the apt install above.
 
 ```
 npm install dockerfile-language-server-nodejs
