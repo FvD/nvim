@@ -18,7 +18,8 @@ The [full list of languageservers](https://microsoft.github.io/language-server-p
 ### R
 
 ```
-install.packages(languageserver)
+R
+install.packages("languageserver")
 ```
 
 ### SQL
