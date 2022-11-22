@@ -9,11 +9,15 @@ vim.opt.hlsearch = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
-vim.opt.wrap = true
+-- vim.opt.wrap = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.lisp = true
 vim.opt.diffopt = "vertical"
+
+vim.cmd([[
+  set colorcolumn=80
+]])
 
 vim.cmd([[
   "------------------------------------
@@ -55,9 +59,9 @@ set guitablabel=\[%N\]\ %t\ %M
 
 vim.cmd([[
   au FileType python                  set ts=4 sw=4
-  au BufRead,BufNewFile *.md          set ft=mkd tw=80 syntax=markdown
-  au BufRead,BufNewFile *.ppmd        set ft=mkd tw=80 syntax=markdown
-  au BufRead,BufNewFile *.markdown    set ft=mkd tw=80 syntax=markdown
+  au BufRead,BufNewFile *.md          set ft=mkd syntax=markdown
+  au BufRead,BufNewFile *.ppmd        set ft=mkd syntax=markdown
+  au BufRead,BufNewFile *.markdown    set ft=mkd syntax=markdown
   au BufRead,BufNewFile *.slimbars    set syntax=slim
 ]])
 
@@ -133,6 +137,7 @@ autocmd BufNewFile,BufRead *.rrst set ft=rrst
 
 autocmd BufNewFile,BufRead *.Rmd set ft=rmd
 autocmd BufNewFile,BufRead *.rmd set ft=rmd
+autocmd BufNewFile,BufRead *.qmd set ft=rmd
 " vim-r-plugin settings
 let vimrplugin_assign_map = "<M-->"
 
@@ -244,11 +249,12 @@ vim.cmd([[
       let vimrplugin_openhtml = 1
   endif
 
-  if has("gui_running")
-      inoremap <C-Space> <C-x><C-o>
-  else
-      inoremap <Nul> <C-x><C-o>
-  endif
+"  if has("gui_running")
+"      inoremap <C-Space> <C-x><C-o>
+"  else
+"      inoremap <Nul> <C-x><C-o>
+"  endif
+
   vmap <Space> <Plug>RDSendSelection
   nmap <Space> <Plug>RDSendLine
 ]])

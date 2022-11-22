@@ -82,6 +82,18 @@ lspconfig.sqlls.setup{}
 
 
 -- Python
+if not configs.pythonls then
+  configs.pythonls = {
+    default_config = {
+    cmd = { "python-language-server"},
+    filetypes = { "py" },
+    root_dir = function(startpath)
+        return lspconfig.util.M.search_ancestors(startpath, matcher)
+      end,
+    settings = {}
+  },
+}
+end 
 
 
 -- Golang
@@ -97,6 +109,7 @@ if not configs.golangcilsp then
     },
   }
 end
+
 lspconfig.golangcilsp.setup{}
 
 -- Docker
@@ -113,4 +126,20 @@ if not configs.dockerls then
 end 
 
 lspconfig.dockerls.setup{}
+
+-- latex
+-- cargo install texlab
+if not configs.texlab then
+  configs.dockerls = {
+    default_config = {
+      cmd = { "texlab-langserver"},
+      filetypes = { "tex" },
+      root_dir = lspconfig.util.root_pattern(".tex"),
+      single_file_support = true,
+  },
+}
+end 
+
+lspconfig.texlab.setup{}
+
 
