@@ -80,88 +80,123 @@ return require('packer').startup(function()
   )
 
   -- lspsaga
-  use 'glepnir/lspsaga.nvim'
-
-  local saga = require('lspsaga')
-  saga.init_lsp_saga()
-
-  -- neorg
-  use {
-    "nvim-neorg/neorg",
-    run = ":Neorg sync-parsers", -- This is the important bit!
+  use({
+    "glepnir/lspsaga.nvim",
+    branch = "main",
     config = function()
-        require('neorg').setup {
-           load = {
-               -- This module deals with handling everything related to the :Neorg command.
-               ["core.neorgcmd"] = {}, 
-               -- "Hop" between Neorg links, following them with a single keypress.
-               ["core.norg.esupports.hop"] = {}, 
-               -- A set of instructions for Neovim to indent Neorg documents. 
-               ["core.norg.esupports.indent"] = {},
-               -- A Neorg module for generating document metadata automatically.
-               ["core.norg.esupports.metagen"] = {}, 
-               -- Easily create files for a journal.
-               -- ["core.norg.journal"] = {}, 
-               -- Handles the displaying of Neorg news and other forms of media in a popup.
-               ["core.norg.news"] = {}, 
-               -- Generates a Table of Content from the Neorg file.
-               ["core.norg.qol.toc"] = {}, 
-               -- Module for implementing todo lists.
-               ["core.norg.qol.todo_items"] = {}, 
-               -- Handles interaction for syntax files for code blocks.
-               ["core.syntax"] = {}, 
-               -- A module designed to integrate TreeSitter into Neorg.
-               ["core.integrations.treesitter"] = {}, 
-               -- Module for managing keybindings with Neorg mode support.
-               ["core.keybinds"] = {}, 
-               -- Handles the creation and management of Neovim's autocommands.
-               ["core.autocommands"] = {}, 
-               -- An Advanced Code Block Exporter.
-               ["core.tangle"] = {}, 
-               -- Modes are a way of isolating different parts of Neorg based on the current mode.
-               ["core.mode"] = {}, 
-               -- This module is be responsible for managing directories full of .norg files.
-               ["core.norg.dirman"] = {
-                    config = {
-                        workspaces = {
-                            fvd = "~/Documents/neorg_workspace",
-                        },
-                        autochdir = true, -- Automatically change the directory to the current workspace's root every time
-                        index = "index.norg", -- The name of the main (root) .norg file
-                        default_workspace = "fvd",
-                   },
-               },
-               -- Manages your tasks with Neorg using the Getting Things Done methodology.
-               ["core.gtd.base"] = {
-	                  config = { 
-			                  workspace = "fvd",
-		                 },
-	            }, 
-               -- Exports Neorg documents into any other supported filetype.
-               ["core.export"] = {}, 
-               -- A Neorg module for moving around different elements up and down.
-               ["core.norg.manoeuvre"] = {}, 
-               -- Interface for core.export to allow exporting to markdown.
-               ["core.export.markdown"] = {}, 
-               -- Enhances the basic Neorg experience by using icons instead of text.
-               ["core.norg.concealer"] = {}, 
-               -- A wrapper to interface with several different completion engines.
-               ["core.norg.completion"] = {
-                    config = {
-                       engine = "nvim-cmp",
-                  }, 
-                },
-               -- Neorg module to create gorgeous presentation slides.
-               --["core.presenter"] = {}, 
-       }
-    }
+        require('lspsaga').setup({})
     end,
-    requires = "nvim-lua/plenary.nvim",
-}
+  })
+
 
   -- search
-  use { 'nvim-telescope/telescope.nvim', 
+  use { 
+   'nvim-telescope/telescope.nvim', 
     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}} }
+
+
+-- Telekasten
+  use {
+    'renerocksai/telekasten.nvim',
+    requires = {'nvim-telescope/telescope.nvim'}
+  }
+
+  local tk_home = "/home/frans/Documents/zettelkasten"
+ 
+  require('telekasten').setup({
+      home = tk_home,
+    
+    -- if true, telekasten will be enabled when opening a note within the configured home
+    take_over_my_home = true,
+
+    -- auto-set telekasten filetype: if false, the telekasten filetype will not be used
+    --                               and thus the telekasten syntax will not be loaded either
+    auto_set_filetype = true,
+
+    -- template for new notes (new_note, follow_link)
+    -- set to `nil` or do not specify if you do not want a template
+    template_new_note = tk_home .. '/' .. 'templates/new_note.md',
+
+    -- template for newly created daily notes (goto_today)
+    -- set to `nil` or do not specify if you do not want a template
+    template_new_daily = tk_home .. '/' .. 'templates/daily.md',
+
+    -- template for newly created weekly notes (goto_thisweek)
+    -- set to `nil` or do not specify if you do not want a template
+    template_new_weekly= tk_home .. '/' .. 'templates/weekly.md',
+
+    -- command palette theme: dropdown (window) or ivy (bottom panel)
+    command_palette_theme = "ivy",
+
+    -- tag list theme:
+    -- get_cursor: small tag list at cursor; ivy and dropdown like above
+    show_tags_theme = "ivy",
+
+    -- when linking to a note in subdir/, create a [[subdir/title]] link
+    -- instead of a [[title only]] link
+    subdirs_in_links = true,
+
+    -- template_handling
+    template_handling = "prefer_new_note",
+
+    -- path handling:
+    new_note_location = "prefer_home",
+
+    -- should all links be updated when a file is renamed
+    rename_update_links = true,
+  })
+
+-- Calendar VIM
+
+  use {
+    'renerocksai/calendar-vim',
+    requires = {'renerocksai/calendar-vim'}
+  }
+
+-- BibTex
+use { "nvim-telescope/telescope-bibtex.nvim",
+  requires = {
+    {'nvim-telescope/telescope.nvim'},
+  },
+  config = function ()
+    require"telescope".load_extension("bibtex")
+  end,
+}
+
+
+require"telescope".setup {
+  extensions = {
+    bibtex = {
+      -- Depth for the *.bib file
+      depth = 1,
+      -- Custom format for citation label
+      custom_formats = {},
+      -- Format to use for citation label.
+      -- Try to match the filetype by default, or use 'plain'
+      format = '',
+      -- Path to global bibliographies (placed outside of the project)
+      global_files = {},
+      -- Define the search keys to use in the picker
+      search_keys = { 'author', 'year', 'title' },
+      -- Template for the formatted citation
+      citation_format = '{{author}} ({{year}}), {{title}}.',
+      -- Only use initials for the authors first name
+      citation_trim_firstname = true,
+      -- Max number of authors to write in the formatted citation
+      -- following authors will be replaced by "et al."
+      citation_max_auth = 2,
+      -- Context awareness disabled by default
+      context = false,
+      -- Fallback to global/directory .bib files if context not found
+      -- This setting has no effect if context = false
+      context_fallback = true,
+      -- Wrapping in the preview window is disabled by default
+      wrap = false,
+    },
+  }
+}
+
+
 
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
@@ -169,6 +204,3 @@ return require('packer').startup(function()
     require('packer').sync()
   end
 end)
-
-
-
