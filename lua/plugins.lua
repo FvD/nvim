@@ -49,8 +49,12 @@ return require('packer').startup(function()
   use 'vim-scripts/ShowMarks'
   use 'vim-scripts/Unicode-RST-tables'
  
-  use {'euclio/vim-markdown-composer', run = 'cargo build --release --locked' }
- 
+ -- Markdown Preview (install without yarn or npm)
+  use({
+      "iamcco/markdown-preview.nvim",
+      run = function() vim.fn["mkdp#util#install"]() end,
+  })
+
    -- Autocompletion
    use 'hrsh7th/cmp-nvim-lua'
    use 'hrsh7th/cmp-nvim-lsp'
@@ -126,11 +130,11 @@ return require('packer').startup(function()
     template_new_weekly= tk_home .. '/' .. 'templates/weekly.md',
 
     -- command palette theme: dropdown (window) or ivy (bottom panel)
-    command_palette_theme = "ivy",
+    command_palette_theme = "dropdown",
 
     -- tag list theme:
     -- get_cursor: small tag list at cursor; ivy and dropdown like above
-    show_tags_theme = "ivy",
+    show_tags_theme = "dropdown",
 
     -- when linking to a note in subdir/, create a [[subdir/title]] link
     -- instead of a [[title only]] link
